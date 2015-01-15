@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+<h:body>
+	<ui:composition template="/template.xhtml">
+		<ui:define name="metadata">
+			<f:metadata>
+				<f:viewParam name="id" required="true" value="#{transferWeb.accountId}"
+					requiredMessage="No Account selected"
+					validatorMessage="Invalid Account id selected">
+					<f:validateLongRange minimum="1" />
+				</f:viewParam>
+			</f:metadata>
+		</ui:define>
+		<ui:define name="content">
+			<h3>
+				All Transfers for Account
+				<h:outputText value="#{accountWeb.currentAccount.id} " />
+			</h3>
+			<h:form>
+				<table>
+					<tr>
+						<td>Date :</td>
+						<td><h:inputText value="#{transferWeb.currentTransfer.date}"
+						  binding="#{transferView.date}"
+						
+						 /></td>
+					</tr>
+					<tr>
+						<td>Montant :</td>
+						<td><h:inputText value="#{transferWeb.currentTransfer.amount}"
+						  binding="#{transferView.amount}"
+						
+						 /></td>
+					</tr>
+					<tr>
+						<td>De :</td>
+						<td><h:inputText value="#{transferWeb.currentTransfer.fromAccount}"
+						  binding="#{transferView.fromAccount}"
+						
+						 /></td>
+					</tr>
+					<tr>
+						<td>Vers :</td>
+						<td><h:inputText value="#{transferWeb.currentTransfer.toAccount}"
+						  binding="#{transferView.toAccount}"
+						
+						 /></td>
+					</tr>
+				</table>
+
+
+				<p>
+					<h:panelGrid columns="3">
+						<h:commandButton value="suivant" action="#{transferWeb.next}" />
+						<h:commandButton value="précédent" action="#{transferWeb.prior}" />
+						<h:commandButton value="modifier" action="#{transferWeb.modify}" />
+						<h:messages styleClass="messages" errorClass="invalid"
+							infoClass="valid" warnClass="warning" globalOnly="true" />
+					</h:panelGrid>
+				</p>
+
+
+				<p:dataTable value="#{transferWeb.allTransfers}" var="transfer"
+					border="1" cellpadding="2" cellspacing="0"
+					rowStyleClass="#{transferWeb.currentTransfer eq transfer?'list-row-even':'list-row-odd'}"
+					rendered="#{transferWeb.allTransfers.size()>0}">
+					<p:column>
+						<f:facet name="header">Numero</f:facet>
+                        #{transfer.id}
+                      </p:column>
+					<p:column>
+						<f:facet name="header">Date</f:facet>
+                           #{transfer.date}
+                    </p:column>
+					<p:column>
+						<f:facet name="header">Montant</f:facet>
+                           #{transfer.amount}
+                    </p:column>
+					<p:column>
+						<f:facet name="header">De</f:facet>
+                           #{transfer.fromAccount}
+                    </p:column>
+                    <p:column>
+						<f:facet name="header">Vers</f:facet>
+                           #{transfer.toAccount}
+                    </p:column>
+				</p:dataTable>
+				<br />
+				
+				<h:panelGroup rendered="#{transferrWeb.allTransfers.size()==0}">
+                              Sorry No Transfer For this Account
+                            </h:panelGroup>
+                            
+				<h:link outcome="accounts" value="back to accounts" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+</html>
+
+<!-- 
+
+The form has an annoying validation error that is triggered whenever 
+a value is entered into the field even before the submit 
+button is clicked. This is exactly the situation that the immediate 
+attribute was designed to avoid. The immediate attribute allows you 
+to bypass validation for a subset of the components in the view. 
+The best way to use the immediate attribute is to think of the 
+components in the view as two logical groups: those that need partial 
+validation, and those that do not. By placing immediate="true" 
+on every component that should participate in the partial validation, 
+and by not having this attribute on the rest of the components, 
+validation is bypassed for those components that do not have 
+the attribute.
+
+ -->
